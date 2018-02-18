@@ -1,6 +1,6 @@
 import urllib
-import binascii
-import os
+# import binascii
+# import os
 from importlib import import_module
 
 from .secret import SECRET
@@ -33,12 +33,12 @@ class OnLoginView(APIView):
                 url + urllib.parse.urlencode(query),
             )
             wxsecret = JSONParser().parse(BytesIO(res.read()))
-            sessionid = binascii.hexlify(os.urandom(16)).decode()
+            # sessionid = binascii.hexlify(os.urandom(16)).decode()
             
             session = self.sessionStore()
             session['openid'] = wxsecret['openid']
             session['session_key'] = wxsecret['session_key']
-            session.set_expiry(60)
+            session.set_expiry(wxsecret['expires_in'])
             session.create()
             sessionid = session.session_key
             
@@ -47,7 +47,7 @@ class OnLoginView(APIView):
             # request.session[sessionid] = wxsecret['openid'] + wxsecret['session_key']
             # request.session.set_expiry(wxsecret['expires_in'])
             
-            print(session.keys())
+            print(session.items())
             print(session.session_key)
             
             return Response(sessionid, status=status.HTTP_200_OK)
@@ -61,6 +61,6 @@ class TestView(APIView):
     def get(self, request, format=None):
         sessionid = request.META['HTTP_WXSESSION']
         session = self.sessionStore(session_key=sessionid)
-        print(session.keys())
+        print(session.items())
         
         return Response(status=status.HTTP_200_OK)
