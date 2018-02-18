@@ -1,10 +1,15 @@
 import urllib
+import binascii
+import os
 
 from .secret import SECRET
+
+from django.utils.six import BytesIO
 
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.parsers import JSONParser
 
 from project.wx.serializers import OnLoginSerializer
 
@@ -25,7 +30,12 @@ class OnLoginView(APIView):
             res = urllib.request.urlopen(
                 url + urllib.parse.urlencode(query),
             )
-            print(res.read())
-            return Response(res.read(), status=status.HTTP_200_OK)
+            wxsecret = JSONParser().parse(BytesIO(res.read()))
+            sessionid = binascii.hexlify(os.urandom(16)).decode()
+            request.session[sessionid] = wxsecret['openid'] + wxsecret['session_key']
+            request.session.set_expiry(wxsecret['expires_in'])
+            print(wxsecret)
+            print(sessionid)
+            return Response(sessionid, status=status.HTTP_200_OK)
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST)
