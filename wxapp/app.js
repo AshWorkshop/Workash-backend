@@ -19,8 +19,19 @@ App({
             url: 'http://localhost:8000/wx/onlogin/',
             method: 'POST',
             data: { code: code },
-            success: function(data, statusCode, header){
-              console.log(data)
+            success: function(res) {
+              console.log(res.data)
+
+              wx.request({
+                url: 'http://localhost:8000/wx/test/',
+                method: 'GET',
+                header: {
+                  'content-type': 'application/json',
+                  'wxsession': res.data
+                }
+              })
+
+
             }
           })
           // -------------------------------

@@ -1,10 +1,12 @@
 import urllib
 import binascii
 import os
+from importlib import import_module
 
 from .secret import SECRET
 
 from django.utils.six import BytesIO
+from django.conf import settings
 
 from rest_framework import status
 from rest_framework.views import APIView
@@ -15,6 +17,7 @@ from project.wx.serializers import OnLoginSerializer
 
 
 class OnLoginView(APIView):
+    sessionStore = import_module(settings.SESSION_ENGINE).SessionStore  # 使用settings中定义的会话管理器
     
     def post(self, request, format=None):
         serializer = OnLoginSerializer(data=request.data)
@@ -25,17 +28,39 @@ class OnLoginView(APIView):
             'grant_type': 'authorization_code'
         }
         if serializer.is_valid():
-            # print(serializer.data['code'])
             query['js_code'] = serializer.data['code']
             res = urllib.request.urlopen(
                 url + urllib.parse.urlencode(query),
             )
             wxsecret = JSONParser().parse(BytesIO(res.read()))
             sessionid = binascii.hexlify(os.urandom(16)).decode()
-            request.session[sessionid] = wxsecret['openid'] + wxsecret['session_key']
-            request.session.set_expiry(wxsecret['expires_in'])
-            print(wxsecret)
-            print(sessionid)
+            
+            session = self.sessionStore()
+            session['openid'] = wxsecret['openid']
+            session['session_key'] = wxsecret['session_key']
+            session.set_expiry(60)
+            session.create()
+            sessionid = session.session_key
+            
+            # if not request.session.session_key:
+                # request.session.save()
+            # request.session[sessionid] = wxsecret['openid'] + wxsecret['session_key']
+            # request.session.set_expiry(wxsecret['expires_in'])
+            
+            print(session.keys())
+            print(session.session_key)
+            
             return Response(sessionid, status=status.HTTP_200_OK)
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST)
+
+            
+class TestView(APIView):
+    sessionStore = import_module(settings.SESSION_ENGINE).SessionStore  # 使用settings中定义的会话管理器
+    
+    def get(self, request, format=None):
+        sessionid = request.META['HTTP_WXSESSION']
+        session = self.sessionStore(session_key=sessionid)
+        print(session.keys())
+        
+        return Response(status=status.HTTP_200_OK)
