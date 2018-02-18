@@ -99,3 +99,9 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+# secrets
+wxapp/project.config.json
+
+# emacs
+*~
