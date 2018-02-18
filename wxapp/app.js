@@ -10,6 +10,21 @@ App({
     wx.login({
       success: res => {
         // 发送 res.code 到后台换取 openId, sessionKey, unionId
+        var code = res.code
+        if (code) {
+          console.log('获取的用户登录凭证：' + code)
+
+          // ----------- 发送凭证 -----------
+          wx.request({
+            url: 'http://localhost:8000/wx/onlogin/',
+            method: 'POST',
+            data: { code: code }
+          })
+          // -------------------------------
+
+        } else {
+          console.log('获取用户登录态失败：' + res.errMsg)
+        }
       }
     })
     // 获取用户信息

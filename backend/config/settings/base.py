@@ -39,7 +39,9 @@ THIRD_PARTY_APPS = (
     'drf_yasg',  # 自动生成docs
 )
 
-LOCAL_APPS = ()
+LOCAL_APPS = (
+    'project.wx',
+)
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 

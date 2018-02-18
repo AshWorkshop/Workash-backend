@@ -105,3 +105,6 @@ wxapp/project.config.json
 
 # emacs
 *~
+
+# database
+/backend/db.sqlite3
