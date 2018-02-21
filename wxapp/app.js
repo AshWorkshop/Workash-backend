@@ -1,3 +1,5 @@
+var wxRequest = require('./utils/wxRequest.js')
+
 //app.js
 App({
   onLaunch: function () {
@@ -7,33 +9,37 @@ App({
     wx.setStorageSync('logs', logs)
 
     // 登录
-    wx.login({
-      success: res => {
-        // 发送 res.code 到后台换取 openId, sessionKey, unionId
-        var code = res.code
-        var that = this
-        if (code) {
-          //console.log('获取的用户登录凭证：' + code)
-          // ----------- 发送凭证 -----------
-          wx.request({
-            url: that.globalData.myhost + 'wx/login/',
-            method: 'POST',
-            data: { code: code },
-            success: function(res) {
-              //console.log(res.data)
-              that.globalData.sessionid = res.data
-              if (that.loginCallback) {
-                that.loginCallback(res)
-              }
-            }
-          })
-          // -------------------------------
+    // wx.login({
+    //   success: res => {
+    //     // 发送 res.code 到后台换取 openId, sessionKey, unionId
+    //     var code = res.code
+    //     var that = this
+    //     if (code) {
+    //       //console.log('获取的用户登录凭证：' + code)
+    //       // ----------- 发送凭证 -----------
+    //       // wx.request({
+    //       //   url: that.globalData.myhost + 'wx/login/',
+    //       //   method: 'POST',
+    //       //   data: { code: code },
+    //       //   success: function(res) {
+    //       //     //console.log(res.data)
+    //       //     that.globalData.sessionid = res.data
+    //       //     if (that.loginCallback) {
+    //       //       that.loginCallback(res)
+    //       //     }
+    //       //   }
+    //       // })
+    //       wxRequest.postRequest(that.globalData.myhost + 'wx/login/', { code: code }).then(res => {
+    //         that.globalData.sessionid = res.data
+    //         console.log(res.data)
+    //       })
+    //       // -------------------------------
 
-        } else {
-          console.log('获取用户登录态失败：' + res.errMsg)
-        }
-      }
-    })
+    //     } else {
+    //       console.log('获取用户登录态失败：' + res.errMsg)
+    //     }
+    //   }
+    // })
     // 获取用户信息
     wx.getSetting({
       success: res => {
