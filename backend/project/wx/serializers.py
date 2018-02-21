@@ -8,4 +8,10 @@ from project.wx.models import WxUser
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
-        fields = ('url',)
+        fields = ('url', 'wxuser')
+
+
+class WxUserSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = WxUser
+        fields = '__all__'

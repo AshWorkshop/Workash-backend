@@ -6,6 +6,7 @@ from project.wx import views
 
 router = routers.DefaultRouter()
 router.register(r'users', views.UserViewSet)
+router.register(r'wxusers', views.WxUserViewSet)
 
 urlpatterns = [
     path('login/', views.LoginView.as_view()),

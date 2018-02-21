@@ -6,6 +6,8 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
 from project.wx.serializers import UserSerializer
+from project.wx.serializers import WxUserSerializer
+from project.wx.models import WxUser
 from project.wx.utils.bases import BaseView
 from project.wx.authentication import WxLoginAuthentication
 from project.wx.utils.auth import logout
@@ -23,6 +25,11 @@ class LoginView(BaseView):
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+
+class WxUserViewSet(viewsets.ModelViewSet):
+    queryset = WxUser.objects.all()
+    serializer_class = WxUserSerializer
 
 
 class UserView(BaseView):
