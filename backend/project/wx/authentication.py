@@ -11,11 +11,10 @@ from project.wx.utils.auth import login
 
 class WxSessionAuthentication(authentication.BaseAuthentication):
     def authenticate(self, request):
-        sessionid = request.META['HTTP_WXSESSION']
         sessionStore = import_module(settings.SESSION_ENGINE).SessionStore
+        sessionid = request.META.get('HTTP_WXSESSION', None)
         if not sessionid:
             return None
-
         session = sessionStore(session_key=sessionid)
         # raise exceptions.AuthenticationFailed('session not exist')
         try:

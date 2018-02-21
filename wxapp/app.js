@@ -28,7 +28,7 @@ App({
                   // 可以将 res 发送给后台解码出 unionId
                   console.log(that.globalData.sessionid)
                   wx.request({
-                    url: 'http://localhost:8000/wx/getuser/',
+                    url: 'http://localhost:8000/wx/users/',
                     data: {
                       iv: res.iv,
                       encryptedData: res.encryptedData
@@ -39,6 +39,7 @@ App({
                       'WXSESSION': that.globalData.sessionid
                     },
                     success: res => {
+                      console.log(res)
                     }
                   })
 

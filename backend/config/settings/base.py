@@ -145,7 +145,11 @@ MEDIA_ROOT = str(APPS_DIR('media'))
 # REST framework config
 
 REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'project.wx.authentication.WxSessionAuthentication',
+    ),
     'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
     ),
     'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
 }
