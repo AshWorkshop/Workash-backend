@@ -11,6 +11,7 @@ App({
       success: res => {
         // 发送 res.code 到后台换取 openId, sessionKey, unionId
         var code = res.code
+        var that = this
         if (code) {
           console.log('获取的用户登录凭证：' + code)
           // ----------- 发送凭证 -----------
@@ -20,14 +21,12 @@ App({
             data: { code: code },
             success: function(res) {
               console.log(res.data)
-              var app = getApp()
-              app.globalData.sessionid = res.data
+              that.globalData.sessionid = res.data
               // ---------- 真正的登录 ----------
               wx.getUserInfo({
                 success: res => {
                   // 可以将 res 发送给后台解码出 unionId
-                  var app = getApp()
-                  console.log(app.globalData.sessionid)
+                  console.log(that.globalData.sessionid)
                   wx.request({
                     url: 'http://localhost:8000/wx/login/',
                     data: {
@@ -37,7 +36,7 @@ App({
                     method: 'GET',
                     header: {
                       'content-type': 'application/json',
-                      'wxsession': app.globalData.sessionid
+                      'wxsession': that.globalData.sessionid
                     },
                     success: res => {
                     }
@@ -65,6 +64,7 @@ App({
             success: res => {
               // 可以将 res 发送给后台解码出 unionId
               this.globalData.userInfo = res.userInfo
+              console.log(this.globalData.sessionid)
 
               // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
               // 所以此处加入 callback 以防止这种情况

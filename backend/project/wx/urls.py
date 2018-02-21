@@ -6,5 +6,4 @@ from project.wx import views
 urlpatterns = [
     path('onlogin/', views.OnLoginView.as_view()),
     path('login/', views.UserView.as_view()),
-    path('test/', views.TestView.as_view()),
 ]
