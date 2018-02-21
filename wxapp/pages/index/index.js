@@ -1,12 +1,16 @@
 //index.js
 var wxRequest = require('../../utils/wxRequest.js')
+var wxApi = require('../../utils/wxApi.js')
+var util = require('../../utils/util.js')
+var config = require('../../utils/config.js').config
+var Promise = require('../../plugins/es6-promise.js')
 
 //获取应用实例
 const app = getApp()
 
 Page({
   data: {
-    motto: 'Hello World',
+    motto: '正在加载数据...',
     userInfo: {},
     hasUserInfo: false,
     canIUse: wx.canIUse('button.open-type.getUserInfo')
@@ -18,6 +22,11 @@ Page({
     })
   },
   onLoad: function () {
+    wx.showToast({
+      title: '加载中',
+      icon: 'loading',
+      duration: 10000
+    })
     if (app.globalData.userInfo) {
       this.setData({
         userInfo: app.globalData.userInfo,
@@ -45,61 +54,16 @@ Page({
       })
     }
 
-    //-------------------- Get Worker --------------------
-    // var sessionid = app.globalData.sessionid
-    // if (sessionid) {
-    //   this.getWorker(sessionid)
-    // } else {
-    //   app.loginCallback = res => {
-    //     sessionid = app.globalData.sessionid
-    //     this.getWorker(sessionid)
-    //   }
-    // }
-    wx.login({
-      success: res => {
-        // 发送 res.code 到后台换取 openId, sessionKey, unionId
-        var code = res.code
-        var that = this
-        if (code) {
-          //console.log('获取的用户登录凭证：' + code)
-          // ----------- 发送凭证 -----------
-          // wx.request({
-          //   url: that.globalData.myhost + 'wx/login/',
-          //   method: 'POST',
-          //   data: { code: code },
-          //   success: function(res) {
-          //     //console.log(res.data)
-          //     that.globalData.sessionid = res.data
-          //     if (that.loginCallback) {
-          //       that.loginCallback(res)
-          //     }
-          //   }
-          // })
-          wxRequest.postRequest(app.globalData.myhost + 'wx/login/', { code: code }).then(res => {
-            app.globalData.sessionid = res.data
-            console.log(res.data)
-            wxRequest.getRequest(app.globalData.myhost + 'worker/getworker/', {}, app.globalData.sessionid).then(res => {
-              console.log(res.data)
-              app.globalData.worker = res.data
-            }).catch(res => {
-              if (res.statusCode == 404) {
-                return wxRequest.postRequest(app.globalData.myhost + 'worker/workers/', {}, app.globalData.sessionid).then(res => {
-                  console.log('create a new worker')
-                  console.log(res.data)
-                  app.globalData.worker = res.data
-                })
-              }
-            })
-          })
-          // -------------------------------
-
-        } else {
-          console.log('获取用户登录态失败：' + res.errMsg)
-        }
+    //-------------------- Get WorkerInfo --------------------
+    var sessionid = app.globalData.sessionid
+    if (sessionid) {
+      this.getWorkerInfo(sessionid)
+    } else {
+      app.loginCallback = sessionid => {
+        this.getWorkerInfo(sessionid)
       }
-    })
-    
-    //----------------------------------------------------
+    }
+    //--------------------------------------------------------
 
   },
   getUserInfo: function(e) {
@@ -110,41 +74,54 @@ Page({
       hasUserInfo: true
     })
   },
-  getWorker: function(sessionid) {
-    var app = getApp()
-    var myhost = app.globalData.myhost
-    wx.request({
-      url: myhost + 'worker/getworker/',
-      method: 'GET',
-      header: {
-        'content-type': 'application/json',
-        'WXSESSION': sessionid
-      },
-      success: res => {
-        var result = null
-        if (res.statusCode == 404) {
-          result = Worker.create(myhost, sessionid)
-        } else if (res.statusCode == 200) {
-          result = res.data
-        }
-        if (result) {
-          app.globalData.worker = result
-          // TODO: Show Total Hours
-          this.setData({
-            motto: result.url
-          })
-        } else {
-          Worker.createCallback = res => {
-            result = res
-            app.globalData.worker = result
-            // TODO: Show Total Hours
-            this.setData({
-              motto: result.url
-            })
-          }
-        }
-        
+  getWorkerInfo: function(sessionid) {
+    var host = config.host
+    var that = this
+    var workerInfo = null
+    console.log('Start handling worker info...')
+    wxRequest.getRequest(host + 'worker/getworker/', {}, sessionid).then(res => {
+      workerInfo = res.data
+      console.log('workerInfo: ' + workerInfo.url)
+    }).catch(res => {
+      if (res.statusCode == 404){
+        console.log('Worker not exists, creating a new one...')
+        return wxRequest.postRequest(host + 'worker/workers/', {}, sessionid).then(res => {
+          workerInfo = res.data
+          console.log('Successfully created a new worker!')
+          console.log('workerInfo: ' + workerInfo.url)
+        })
       }
+    }).finally(res => {
+      console.log('Successfully got worker info!')
+      app.globalData.workerInfo = workerInfo
+      var workUrls = workerInfo.works
+      var sum = 0.0
+      const promises = workUrls.map(function (workUrl) {
+        return () => {
+          return wxRequest.getRequest(workUrl, {}, sessionid).then(res => {
+            sum += res.data.hours;
+          })
+        }
+      });
+      util.queue(promises, 5).then(() => {
+        that.setData({
+          motto: '本月工时:' + sum
+        })
+        wx.hideToast()
+        console.log('Successfuly load hours')
+      }).catch((res) => {
+        console.log(res)
+      })
+      
+      // Promise.all(promises).then(function (ress) {
+      //   for (let res of ress) {
+      //     sum += res.data.hours;
+      //   }
+        // that.setData({
+        //   motto: sum
+        // });
+        // wx.hideToast();
+      // });
     })
   }
 })

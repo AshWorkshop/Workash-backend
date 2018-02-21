@@ -1,4 +1,6 @@
 var wxRequest = require('./utils/wxRequest.js')
+var wxApi = require('./utils/wxApi.js')
+var config = require('./utils/config.js').config
 
 //app.js
 App({
@@ -7,39 +9,22 @@ App({
     var logs = wx.getStorageSync('logs') || []
     logs.unshift(Date.now())
     wx.setStorageSync('logs', logs)
-
+    var that = this;
+    var host = config.host;
     // 登录
-    // wx.login({
-    //   success: res => {
-    //     // 发送 res.code 到后台换取 openId, sessionKey, unionId
-    //     var code = res.code
-    //     var that = this
-    //     if (code) {
-    //       //console.log('获取的用户登录凭证：' + code)
-    //       // ----------- 发送凭证 -----------
-    //       // wx.request({
-    //       //   url: that.globalData.myhost + 'wx/login/',
-    //       //   method: 'POST',
-    //       //   data: { code: code },
-    //       //   success: function(res) {
-    //       //     //console.log(res.data)
-    //       //     that.globalData.sessionid = res.data
-    //       //     if (that.loginCallback) {
-    //       //       that.loginCallback(res)
-    //       //     }
-    //       //   }
-    //       // })
-    //       wxRequest.postRequest(that.globalData.myhost + 'wx/login/', { code: code }).then(res => {
-    //         that.globalData.sessionid = res.data
-    //         console.log(res.data)
-    //       })
-    //       // -------------------------------
-
-    //     } else {
-    //       console.log('获取用户登录态失败：' + res.errMsg)
-    //     }
-    //   }
-    // })
+    var wxLogin = wxApi.wxLogin()
+    wxLogin().then(res => {
+      var code = res.code
+      console.log('code: ' + code)
+      return wxRequest.postRequest(host + 'wx/login/', {code: code})
+    }).then(res => {
+      var sessionid = res.data
+      console.log('sessionid: ' + sessionid)
+      that.globalData.sessionid = sessionid
+      if (that.loginCallback) {
+        that.loginCallback(sessionid)
+      }
+    })
     // 获取用户信息
     wx.getSetting({
       success: res => {
@@ -65,7 +50,7 @@ App({
   globalData: {
     userInfo: null,
     sessionid: null,
-    worker: null,
+    workerInfo: null,
     myhost: 'http://localhost:8000/',
   }
 })

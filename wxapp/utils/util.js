@@ -1,3 +1,5 @@
+var Promise = require('../plugins/es6-promise.js')
+
 const formatTime = date => {
   const year = date.getFullYear()
   const month = date.getMonth() + 1
@@ -14,30 +16,35 @@ const formatNumber = n => {
   return n[1] ? n : '0' + n
 }
 
-var Worker = {
-  create: (myhost, sessionid) => {
-    var result = null
-    wx.request({
-      url: myhost + 'worker/workers/',
-      method: 'POST',
-      header: {
-        'content-type': 'application/json',
-        'WXSESSION': sessionid
-      },
-      success: res => {
-        if (res.statusCode == 201) {
-          result = res.data
+function queue(fns, count) {
+  return new Promise((resolve, reject) => {
+    let a = fns.slice(0, count)
+    let b = fns.slice(count)
+    let l = fns.length
+    let runs = 0
+    if (fns.length == 0) return resolve()
+    for (let fn of a) {
+      fn().then(() => {
+        runs += 1
+        if (runs == l) return resolve()
+        let next = function () {
+          let fn = b.shift()
+          if (!fn) {
+            return
+          } 
+          return fn().then(() => {
+            runs += 1
+            if (runs == l) return resolve()
+            return next()
+          }, reject)
         }
-        if (this.createCallback) {
-          this.createCallback(result)
-        }
-        return result
-      }
-    })
-  },
+        return next()
+      }, reject)
+    }
+  })
 }
 
 module.exports = {
   formatTime: formatTime,
-  Worker: Worker,
+  queue: queue
 }
