@@ -112,3 +112,4 @@ backend/project/wx/secret.py
 
 # local_files
 backend/project/wx/migrations/
+backend/project/worker/migrations/

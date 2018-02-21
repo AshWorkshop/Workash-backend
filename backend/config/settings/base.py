@@ -41,6 +41,7 @@ THIRD_PARTY_APPS = (
 
 LOCAL_APPS = (
     'project.wx',
+    'project.worker',
 )
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
