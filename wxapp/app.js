@@ -16,7 +16,7 @@ App({
           console.log('获取的用户登录凭证：' + code)
           // ----------- 发送凭证 -----------
           wx.request({
-            url: 'http://localhost:8000/wx/onlogin/',
+            url: 'http://localhost:8000/wx/login/',
             method: 'POST',
             data: { code: code },
             success: function(res) {
@@ -28,7 +28,7 @@ App({
                   // 可以将 res 发送给后台解码出 unionId
                   console.log(that.globalData.sessionid)
                   wx.request({
-                    url: 'http://localhost:8000/wx/login/',
+                    url: 'http://localhost:8000/wx/getuser/',
                     data: {
                       iv: res.iv,
                       encryptedData: res.encryptedData
@@ -36,7 +36,7 @@ App({
                     method: 'GET',
                     header: {
                       'content-type': 'application/json',
-                      'WXSESSION': 'wdll60sfj7ibbu2wsfa7g2y6'
+                      'WXSESSION': that.globalData.sessionid
                     },
                     success: res => {
                     }

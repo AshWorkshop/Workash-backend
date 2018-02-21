@@ -12,7 +12,7 @@ from project.wx.authentications import WxLoginAuthentication
 from project.wx.utils.auth import logout
 
 
-class OnLoginView(BaseView):
+class LoginView(BaseView):
     authentication_classes = (WxLoginAuthentication, )
     permission_classes = (IsAuthenticated,)
 
