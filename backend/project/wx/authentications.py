@@ -6,9 +6,8 @@ from django.contrib.auth.models import User
 from rest_framework import authentication
 from rest_framework import exceptions
 
-from .secret import SECRET
-from project.wx.utils.WXBizDataCrypt import WXBizDataCrypt
-from project.wx.models import WxUser
+from project.wx.utils.auth import login
+
 
 class WxSessionAuthentication(authentication.BaseAuthentication):
     def authenticate(self, request):
@@ -19,18 +18,19 @@ class WxSessionAuthentication(authentication.BaseAuthentication):
 
         session = sessionStore(session_key=sessionid)
         # raise exceptions.AuthenticationFailed('session not exist')
-        appid = SECRET['appid']
-        session_key = session['session_key']
-        encryptedData = request.GET['encryptedData']
-        iv = request.GET['iv']
+        try:
+            openid = session['openid']
+        except KeyError:
+            raise exceptions.AuthenticationFailed('session expired')
 
-        pc = WXBizDataCrypt(appid, session_key)
-        data = pc.decrypt(encryptedData, iv)
+        try:
+            user = User.objects.get(username=openid)
+        except User.DoesNotExist:
+            raise exceptions.AuthenticationFailed('No such user')
 
-        openid = data['openId']
+        return (user, session)
 
-        user, is_new = User.objects.get_or_create(username=openid)
-        if is_new:
-            WxUser.objects.create(user=user)
 
-        return (user, None)
+class WxLoginAuthentication(authentication.BaseAuthentication):
+    def authenticate(self, request):
+        return login(request.data['code'])
