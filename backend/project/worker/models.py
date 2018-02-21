@@ -11,6 +11,10 @@ class Worker(models.Model):
         on_delete=models.CASCADE
     )
     created = models.DateTimeField(auto_now_add=True)
+    participations = models.ManyToManyField(
+        'worker.Project',
+        related_name='actors'
+    )
 
 
 class Project(models.Model):

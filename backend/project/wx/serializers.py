@@ -14,4 +14,4 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 class WxUserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = WxUser
-        fields = '__all__'
+        fields = ('url', 'user', 'worker')

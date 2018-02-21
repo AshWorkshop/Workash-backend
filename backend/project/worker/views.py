@@ -1,3 +1,37 @@
-from django.shortcuts import render
+from rest_framework import viewsets
 
-# Create your views here.
+from project.worker.models import Worker
+from project.worker.models import Work
+from project.worker.models import Project
+from project.worker.serializers import WorkerSerializer
+from project.worker.serializers import WorkSerializer
+from project.worker.serializers import ProjectSerializer
+
+
+class WorkerViewSet(viewsets.ModelViewSet):
+    queryset = Worker.objects.all()
+    serializer_class = WorkerSerializer
+
+    def perform_create(self, serializer):
+        wxuser = self.request.user.wxuser
+        serializer.save(wxuser=wxuser)
+
+
+class WorkViewSet(viewsets.ModelViewSet):
+    queryset = Work.objects.all()
+    serializer_class = WorkSerializer
+
+    def perform_create(self, serializer):
+        wxuser = self.request.user.wxuser
+        worker = wxuser.worker
+        serializer.save(worker=worker)
+
+
+class ProjectViewSet(viewsets.ModelViewSet):
+    queryset = Project.objects.all()
+    serializer_class = ProjectSerializer
+
+    def perform_create(self, serializer):
+        wxuser = self.request.user.wxuser
+        manager = wxuser.worker
+        serializer.save(manager=manager)

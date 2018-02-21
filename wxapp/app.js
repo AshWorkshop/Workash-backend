@@ -28,10 +28,11 @@ App({
                   // 可以将 res 发送给后台解码出 unionId
                   console.log(that.globalData.sessionid)
                   wx.request({
-                    url: 'http://localhost:8000/wx/wxusers/',
+                    url: 'http://localhost:8000/worker/workers/',
                     data: {
-                      iv: res.iv,
-                      encryptedData: res.encryptedData
+                      project: "http://localhost:8000/worker/projects/2/",
+                      date: '2018-02-21',
+                      name: '测试4',
                     },
                     method: 'GET',
                     header: {

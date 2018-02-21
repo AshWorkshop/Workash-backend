@@ -108,7 +108,7 @@ backend/project/wx/secret.py
 *~
 
 # database
-/backend/db.sqlite3
+/backend/*.sqlite3
 
 # local_files
 backend/project/wx/migrations/
