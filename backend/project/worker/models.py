@@ -13,13 +13,29 @@ class Worker(models.Model):
     created = models.DateTimeField(auto_now_add=True)
 
 
+class Project(models.Model):
+    """
+    工作项目信息
+    """
+    manager = models.ForeignKey(
+        Worker,
+        related_name='projects',
+        on_delete=models.CASCADE
+    )
+    created = models.DateTimeField(auto_now_add=True)
+    name = models.CharField(max_length=100)
+    detail = models.CharField(max_length=400, blank=True)
+    begin = models.DateField()
+    end = models.DateField()
+
+
 class Work(models.Model):
     """
     工作信息
     """
-    manager = models.ForeignKey(
-        Worker,
-        related_name='manages',
+    project = models.ForeignKey(
+        Project,
+        related_name='works',
         on_delete=models.CASCADE
     )
     worker = models.ForeignKey(
