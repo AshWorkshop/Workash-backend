@@ -14,6 +14,30 @@ const formatNumber = n => {
   return n[1] ? n : '0' + n
 }
 
+var Worker = {
+  create: (myhost, sessionid) => {
+    var result = null
+    wx.request({
+      url: myhost + 'worker/workers/',
+      method: 'POST',
+      header: {
+        'content-type': 'application/json',
+        'WXSESSION': sessionid
+      },
+      success: res => {
+        if (res.statusCode == 201) {
+          result = res.data
+        }
+        if (this.createCallback) {
+          this.createCallback(result)
+        }
+        return result
+      }
+    })
+  },
+}
+
 module.exports = {
-  formatTime: formatTime
+  formatTime: formatTime,
+  Worker: Worker,
 }

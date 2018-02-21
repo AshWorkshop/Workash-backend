@@ -13,41 +13,18 @@ App({
         var code = res.code
         var that = this
         if (code) {
-          console.log('获取的用户登录凭证：' + code)
+          //console.log('获取的用户登录凭证：' + code)
           // ----------- 发送凭证 -----------
           wx.request({
-            url: 'http://localhost:8000/wx/login/',
+            url: that.globalData.myhost + 'wx/login/',
             method: 'POST',
             data: { code: code },
             success: function(res) {
-              console.log(res.data)
+              //console.log(res.data)
               that.globalData.sessionid = res.data
-              // ---------- 真正的登录 ----------
-              wx.getUserInfo({
-                success: res => {
-                  // 可以将 res 发送给后台解码出 unionId
-                  console.log(that.globalData.sessionid)
-                  wx.request({
-                    url: 'http://localhost:8000/worker/workers/',
-                    data: {
-                      project: "http://localhost:8000/worker/projects/2/",
-                      date: '2018-02-21',
-                      name: '测试4',
-                    },
-                    method: 'GET',
-                    header: {
-                      'content-type': 'application/json',
-                      'WXSESSION': that.globalData.sessionid
-                    },
-                    success: res => {
-                      console.log(res)
-                    }
-                  })
-
-                }
-              })
-              // --------------------------------
-
+              if (that.loginCallback) {
+                that.loginCallback(res)
+              }
             }
           })
           // -------------------------------
@@ -66,7 +43,7 @@ App({
             success: res => {
               // 可以将 res 发送给后台解码出 unionId
               this.globalData.userInfo = res.userInfo
-              console.log(this.globalData.sessionid)
+              //console.log(this.globalData.sessionid)
 
               // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
               // 所以此处加入 callback 以防止这种情况
@@ -82,5 +59,7 @@ App({
   globalData: {
     userInfo: null,
     sessionid: null,
+    worker: null,
+    myhost: 'http://localhost:8000/',
   }
 })

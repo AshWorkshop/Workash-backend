@@ -42,6 +42,19 @@ Page({
         }
       })
     }
+
+    //-------------------- Get Worker --------------------
+    var sessionid = app.globalData.sessionid
+    if (sessionid) {
+      this.getWorker(sessionid)
+    } else {
+      app.loginCallback = res => {
+        sessionid = app.globalData.sessionid
+        this.getWorker(sessionid)
+      }
+    }
+    //----------------------------------------------------
+
   },
   getUserInfo: function(e) {
     console.log(e)
@@ -49,6 +62,43 @@ Page({
     this.setData({
       userInfo: e.detail.userInfo,
       hasUserInfo: true
+    })
+  },
+  getWorker: function(sessionid) {
+    var app = getApp()
+    var myhost = app.globalData.myhost
+    wx.request({
+      url: myhost + 'worker/getworker/',
+      method: 'GET',
+      header: {
+        'content-type': 'application/json',
+        'WXSESSION': sessionid
+      },
+      success: res => {
+        var result = null
+        if (res.statusCode == 404) {
+          result = Worker.create(myhost, sessionid)
+        } else if (res.statusCode == 200) {
+          result = res.data
+        }
+        if (result) {
+          app.globalData.worker = result
+          // TODO: Show Total Hours
+          this.setData({
+            motto: result
+          })
+        } else {
+          Worker.createCallback = res => {
+            result = res
+            app.globalData.worker = result
+            // TODO: Show Total Hours
+            this.setData({
+              motto: result
+            })
+          }
+        }
+        
+      }
     })
   }
 })

@@ -1,4 +1,6 @@
 from rest_framework import viewsets
+from rest_framework import status
+from rest_framework.response import Response
 
 from project.worker.models import Worker
 from project.worker.models import Work
@@ -6,6 +8,7 @@ from project.worker.models import Project
 from project.worker.serializers import WorkerSerializer
 from project.worker.serializers import WorkSerializer
 from project.worker.serializers import ProjectSerializer
+from project.wx.utils.bases import BaseView
 
 
 class WorkerViewSet(viewsets.ModelViewSet):
@@ -35,3 +38,14 @@ class ProjectViewSet(viewsets.ModelViewSet):
         wxuser = self.request.user.wxuser
         manager = wxuser.worker
         serializer.save(manager=manager)
+
+
+class GetWorkerView(BaseView):
+    def get(self, request, format=None):
+        wxuser = request.user.wxuser
+        if hasattr(wxuser, 'worker'):
+            worker = wxuser.worker
+            serializer = WorkerSerializer(worker, context={'request': request})
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)

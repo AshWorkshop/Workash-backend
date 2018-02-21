@@ -10,5 +10,6 @@ router.register(r'works', views.WorkViewSet)
 router.register(r'projects', views.ProjectViewSet)
 
 urlpatterns = [
+    path('getworker/', views.GetWorkerView.as_view()),
     path('', include(router.urls)),
 ]
