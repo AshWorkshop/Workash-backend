@@ -10,9 +10,11 @@ from django.utils.six import BytesIO
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.parsers import JSONParser
+from rest_framework.permissions import IsAuthenticated
 
 from project.wx.serializers import OnLoginSerializer
 from project.wx.utils.bases import BaseView
+from project.wx.authentications import WxSessionAuthentication
 
 
 class OnLoginView(BaseView):
@@ -45,17 +47,10 @@ class OnLoginView(BaseView):
 
 
 class UserView(BaseView):
+    authentication_classes = (WxSessionAuthentication, )
+    permission_classes = (IsAuthenticated,)
+
     def get(self, request, format=None):
-        sessionid = request.META['HTTP_WXSESSION']
-        session = self.get_session_by_session_key(session_key=sessionid)
-
-        appid = SECRET['appid']
-        session_key = session['session_key']
-        encryptedData = request.GET['encryptedData']
-        iv = request.GET['iv']
-
-        pc = WXBizDataCrypt(appid, session_key)
-
-        print(pc.decrypt(encryptedData, iv))
+        print(request.user.username)
 
         return Response(status=status.HTTP_200_OK)

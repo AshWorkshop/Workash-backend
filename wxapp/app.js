@@ -36,7 +36,7 @@ App({
                     method: 'GET',
                     header: {
                       'content-type': 'application/json',
-                      'wxsession': that.globalData.sessionid
+                      'WXSESSION': that.globalData.sessionid
                     },
                     success: res => {
                     }

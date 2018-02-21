@@ -6,7 +6,7 @@ class WxUser(models.Model):
     """
     user = models.OneToOneField(
         'auth.User',
-        related_name='wxUser',
+        related_name='wxuser',
         on_delete=models.CASCADE
     )
-    
+    # unionid = models.CharField(max_length=100)
