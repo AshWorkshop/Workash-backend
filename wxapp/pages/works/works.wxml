@@ -1,0 +1,6 @@
+<!--pages/works/works.wxml-->
+<view class="container work-list">
+  <block wx:for="{{works}}" wx:for-item="work">
+    <text class="work-item">{{index + 1}}. {{work.name}}，工时：{{work.hours}}h</text>
+  </block>
+</view>

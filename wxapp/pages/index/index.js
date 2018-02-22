@@ -13,12 +13,19 @@ Page({
     motto: '正在加载数据...',
     userInfo: {},
     hasUserInfo: false,
+    hasWorkerInfo: false,
     canIUse: wx.canIUse('button.open-type.getUserInfo')
   },
   //事件处理函数
   bindViewTap: function() {
     wx.navigateTo({
       url: '../logs/logs'
+    })
+  },
+  hoursTap: function() {
+    console.log('Going to works-view')
+    wx.navigateTo({
+      url: '../works/works',
     })
   },
   onLoad: function () {
@@ -94,11 +101,23 @@ Page({
     }).finally(res => {
       console.log('Successfully got worker info!')
       app.globalData.workerInfo = workerInfo
+      that.hasWorkerInfo = true
+      // ---------- Has worker info callback ----------
+      if (app.workerInfoReadyCallback) {
+        app.workerInfoReadyCallback(workerInfo)
+      }
+      // ----------------------------------------------
       var workUrls = workerInfo.works
       var sum = 0.0
+      // 清理缓存
+      wx.setStorageSync('works', [])
+      app.globalData.worksInfoReady = false
       const promises = workUrls.map(function (workUrl) {
         return () => {
           return wxRequest.getRequest(workUrl, {}, sessionid).then(res => {
+            let works = wx.getStorageSync('works') || []
+            works.unshift(res.data)
+            wx.setStorageSync('works', works)
             sum += res.data.hours;
           })
         }
@@ -108,7 +127,13 @@ Page({
           motto: '本月工时:' + sum
         })
         wx.hideToast()
-        console.log('Successfuly load hours')
+        console.log('Successfuly get works')
+        app.globalData.worksInfoReady = true
+        // ---------- Has works info callback ----------
+        if (app.worksInfoReadyCallback) {
+          app.worksInfoReadyCallback()
+        }
+        // ----------------------------------------------
       }).catch((res) => {
         console.log(res)
       })

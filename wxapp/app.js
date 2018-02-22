@@ -51,6 +51,6 @@ App({
     userInfo: null,
     sessionid: null,
     workerInfo: null,
-    myhost: 'http://localhost:8000/',
+    worksInfoReady: false
   }
 })
