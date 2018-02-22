@@ -10,4 +10,9 @@
   <view class="usermotto">
     <text bindtap="hoursTap" class="user-motto">{{motto}}</text>
   </view>
+  <view class="add-work">
+    <button type="primary" size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}"
+        disabled="{{disabled}}" bindtap="addWorkTap" hover-class="other-button-hover"> ＋ </button>
+  </view>
+  
 </view>

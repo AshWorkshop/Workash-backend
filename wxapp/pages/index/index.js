@@ -14,7 +14,13 @@ Page({
     userInfo: {},
     hasUserInfo: false,
     hasWorkerInfo: false,
-    canIUse: wx.canIUse('button.open-type.getUserInfo')
+    canIUse: wx.canIUse('button.open-type.getUserInfo'),
+    defaultSize: 'default',
+    primarySize: 'default',
+    warnSize: 'default',
+    disabled: false,
+    plain: false,
+    loading: false
   },
   //事件处理函数
   bindViewTap: function() {
@@ -27,6 +33,28 @@ Page({
     wx.navigateTo({
       url: '../works/works',
     })
+  },
+  addWorkTap: function () {
+    console.log('Going to add-work-view')
+w
+    console.log('Going to works-view')
+    wx.navigateTo({
+      url: '../works/works',
+    })
+  },
+  addWorkTap: function () {
+    console.log('Going to add-work-view')
+    if (app.globalData.workerInfo) {
+      wx.navigateTo({
+        url: '../works/add/add',
+      })
+    } else {
+      app.worksInfoReadyCallback = () => {
+        wx.navigateTo({
+          url: '../works/add/add',
+        })
+      }
+    }
   },
   onLoad: function () {
     wx.showToast({

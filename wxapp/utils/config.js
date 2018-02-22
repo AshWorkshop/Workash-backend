@@ -1,5 +1,5 @@
 const config = {
-  host: "http://localhost:8000/",
+  host: "http://39.108.82.112:8000/",
 }
 
 module.exports = {

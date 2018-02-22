@@ -2,7 +2,8 @@
   "pages": [
     "pages/index/index",
     "pages/logs/logs",
-    "pages/works/works"
+    "pages/works/works",
+    "pages/works/add/add"
   ],
   "window": {
     "backgroundTextStyle": "light",
