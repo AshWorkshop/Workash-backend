@@ -12,7 +12,7 @@ const app = getApp()
 
 Page({
   data: {
-    motto: '正在加载数据...',
+    motto: '0',
     userInfo: {},
     hasUserInfo: false,
     hasWorkerInfo: false,
@@ -58,11 +58,14 @@ w
       }
     }
   },
-  onLoad: function () {
-    wx.showToast({
-      title: '加载中',
-      icon: 'loading',
-      duration: 10000
+  onShow: function () {
+    // wx.showToast({
+    //   title: '正在加载数据...',
+    //   icon: 'loading',
+    //   duration: 10000
+    // })
+    wx.showLoading({
+      title: '正在加载数据...',
     })
     if (app.globalData.userInfo) {
       this.setData({
@@ -144,59 +147,21 @@ w
           console.log(app.globalData.worker);
           this.setData({
             motto: app.globalData.worker.participations[0].totalHours
-          })
+          });
+          // ---------- Has worker info callback ----------
+          if (app.workerReadyCallback) {
+            app.workerReadyCallback();
+          }
+          // ----------------------------------------------
+          wx.hideLoading();
+          
         }).catch(res => {
           console.log(res);
         });
       }).catch(res => {
         console.log(res);
       });
-      that.hasWorkerInfo = true
-      // ---------- Has worker info callback ----------
-      if (app.workerInfoReadyCallback) {
-        app.workerInfoReadyCallback(workerInfo)
-      }
-      // ----------------------------------------------
-      var workUrls = workerInfo.works
-      var sum = 0.0
-      // 清理缓存
-      wx.setStorageSync('works', [])
-      app.globalData.worksInfoReady = false
-      const promises = workUrls.map(function (workUrl) {
-        return () => {
-          return wxRequest.getRequest(workUrl, {}, sessionid).then(res => {
-            let works = wx.getStorageSync('works') || []
-            works.unshift(res.data)
-            wx.setStorageSync('works', works)
-            sum += res.data.hours;
-          })
-        }
-      });
-      // util.queue(promises, 5).then(() => {
-      //   that.setData({
-      //     motto: '本月工时:' + sum
-      //   })
-      //   wx.hideToast()
-      //   console.log('Successfuly get works')
-      //   app.globalData.worksInfoReady = true
-      //   // ---------- Has works info callback ----------
-      //   if (app.worksInfoReadyCallback) {
-      //     app.worksInfoReadyCallback()
-      //   }
-      //   // ----------------------------------------------
-      // }).catch((res) => {
-      //   console.log(res)
-      // })
       
-      // Promise.all(promises).then(function (ress) {
-      //   for (let res of ress) {
-      //     sum += res.data.hours;
-      //   }
-        // that.setData({
-        //   motto: sum
-        // });
-        // wx.hideToast();
-      // });
     })
   }
 })

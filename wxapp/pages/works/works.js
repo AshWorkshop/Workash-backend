@@ -21,15 +21,7 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    var that = this
-    var worksReady = app.globalData.worksInfoReady
-    if (worksReady) {
-      that.getWorks()
-    } else {
-      app.worksInfoReadyCallback = () => {
-        that.getWorks()
-      }
-    }
+    
   },
 
   /**
@@ -43,7 +35,14 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-  
+    var that = this
+    if (app.globalData.worker.isPropLoaded) {
+      that.getWorks()
+    } else {
+      app.workerReadyCallback = () => {
+        that.getWorks()
+      }
+    }
   },
 
   /**
@@ -84,7 +83,7 @@ Page({
   getWorks: function () {
     console.log('Showing works info')
     this.setData({
-      works: (wx.getStorageSync('works') || []).sort((a, b) => {
+      works: (app.globalData.worker.works).sort((a, b) => {
         let ta = (new Date(a.created)).getTime()
         let tb = (new Date(b.created)).getTime()
         if (ta > tb) {

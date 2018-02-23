@@ -11,11 +11,11 @@ export function workerLoader (url, data) {
   return new Promise((resolve, reject) => {
     if (data.sessionid) {
       let workerInfo = null;
-      wx.showToast({
-        title: '正在加载Worker...',
-        icon: 'loading',
-        duration: 10000
-      });
+      // wx.showToast({
+      //   title: '正在加载Worker...',
+      //   icon: 'loading',
+      //   duration: 10000
+      // });
       wxRequest.getRequest(url, {}, data.sessionid).then(res => {
         workerInfo = res.data;
         console.log('Successfully get worker: ' + workerInfo.url);
@@ -52,7 +52,7 @@ export function workerLoader (url, data) {
         console.log(res);
         reject(res);
       }).finally(res => {
-        wx.hideToast();
+        // wx.hideToast();
       });
     } else {
       reject("No sessionid!");
@@ -64,11 +64,11 @@ export function participationLoader (url, data) {
   return new Promise((resolve, reject) => {
     if (data.sessionid) {
       let partInfo = null;
-      wx.showToast({
-        title: '正在加载Participation...',
-        icon: 'loading',
-        duration: 10000
-      });
+      // wx.showToast({
+      //   title: '正在加载Participation...',
+      //   icon: 'loading',
+      //   duration: 10000
+      // });
       wxRequest.getRequest(url, {}, data.sessionid).then(res => {
         partInfo = res.data;
         console.log('Successfully get participation: ' + partInfo.url);
@@ -89,7 +89,7 @@ export function participationLoader (url, data) {
         console.log(res);
         reject(res);
       }).finally(res => {
-        wx.hideToast();
+        // wx.hideToast();
       });
     } else {
       reject("No sessionid!");
@@ -101,11 +101,11 @@ export function projectLoader(url, data) {
   return new Promise((resolve, reject) => {
     if (data.sessionid) {
       let projectInfo = null;
-      wx.showToast({
-        title: '正在加载Project...',
-        icon: 'loading',
-        duration: 10000
-      });
+      // wx.showToast({
+      //   title: '正在加载Project...',
+      //   icon: 'loading',
+      //   duration: 10000
+      // });
       wxRequest.getRequest(url, {}, data.sessionid).then(res => {
         projectInfo = res.data;
         console.log('Successfully get project: ' + projectInfo.url);
@@ -143,7 +143,7 @@ export function projectLoader(url, data) {
         console.log(res);
         reject(res);
       }).finally(res => {
-        wx.hideToast();
+        // wx.hideToast();
       });
     } else {
       reject("No sessionid!");
@@ -156,11 +156,11 @@ export function workLoader(url, data) {
   return new Promise((resolve, reject) => {
     if (data.sessionid) {
       let workInfo = null;
-      wx.showToast({
-        title: '正在加载Work...',
-        icon: 'loading',
-        duration: 10000
-      });
+      // wx.showToast({
+      //   title: '正在加载Work...',
+      //   icon: 'loading',
+      //   duration: 10000
+      // });
       wxRequest.getRequest(url, {}, data.sessionid).then(res => {
         workInfo = res.data;
         console.log('Successfully get work: ' + workInfo.url);
@@ -184,7 +184,7 @@ export function workLoader(url, data) {
         console.log(res);
         reject(res);
       }).finally(res => {
-        wx.hideToast();
+        // wx.hideToast();
       });
     } else {
       reject("No sessionid!");

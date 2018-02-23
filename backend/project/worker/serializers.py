@@ -32,6 +32,12 @@ class WorkerSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('url', 'wxuser', 'created', 'projects', 'works', 'participations')
 
 
+class GetWorkerSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Worker
+        fields = ('url',)
+
+
 class WorkSerializer(serializers.HyperlinkedModelSerializer):
     worker = serializers.HyperlinkedRelatedField(
         read_only=True,

@@ -6,6 +6,7 @@ from project.worker.models import Worker
 from project.worker.models import Work
 from project.worker.models import Project
 from project.worker.serializers import WorkerSerializer
+from project.worker.serializers import GetWorkerSerializer
 from project.worker.serializers import WorkSerializer
 from project.worker.serializers import ProjectSerializer
 from project.wx.utils.bases import BaseView
@@ -45,7 +46,7 @@ class GetWorkerView(BaseView):
         wxuser = request.user.wxuser
         if hasattr(wxuser, 'worker'):
             worker = wxuser.worker
-            serializer = WorkerSerializer(worker, context={'request': request})
+            serializer = GetWorkerSerializer(worker, context={'request': request})
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
