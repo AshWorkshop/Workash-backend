@@ -61,4 +61,4 @@ class ProjectSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Project
-        fields = ('url', 'manager', 'created', 'name', 'detail', 'begin', 'end', 'works', 'actors')
+        fields = ('url', 'manager', 'created', 'name', 'detail', 'begin', 'end', 'is_active', 'works', 'actors')

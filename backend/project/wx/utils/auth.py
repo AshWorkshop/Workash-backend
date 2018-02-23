@@ -24,6 +24,7 @@ def login(code):
     )
     wxsecret = JSONParser().parse(BytesIO(res.read()))
     # sessionid = binascii.hexlify(os.urandom(16)).decode()
+    # print(wxsecret)
     expiry = wxsecret.pop('expires_in')
 
     sessionStore = import_module(settings.SESSION_ENGINE).SessionStore

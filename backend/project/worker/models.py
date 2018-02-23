@@ -31,6 +31,7 @@ class Project(models.Model):
     detail = models.CharField(max_length=400, blank=True)
     begin = models.DateField()
     end = models.DateField()
+    is_active = models.BooleanField(default=True)
 
 
 class Work(models.Model):
