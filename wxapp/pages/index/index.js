@@ -1,9 +1,11 @@
 //index.js
-var wxRequest = require('../../utils/wxRequest.js')
-var wxApi = require('../../utils/wxApi.js')
-var util = require('../../utils/util.js')
-var config = require('../../utils/config.js').config
-var Promise = require('../../plugins/es6-promise.js')
+var wxRequest = require('../../utils/wxRequest.js');
+var wxApi = require('../../utils/wxApi.js');
+var util = require('../../utils/util.js');
+var config = require('../../utils/config.js').config;
+var Promise = require('../../plugins/es6-promise.js');
+var Worker = require('../../utils/worker/Worker.js').Worker;
+var loaders = require('../../utils/worker/loaders.js');
 
 //获取应用实例
 const app = getApp()
@@ -128,7 +130,27 @@ w
       }
     }).finally(res => {
       console.log('Successfully got worker info!')
-      app.globalData.workerInfo = workerInfo
+      app.globalData.workerInfo = workerInfo;
+      app.globalData.worker = new Worker({
+        url: workerInfo.url,
+        loadData: {
+          sessionid: app.globalData.sessionid
+        },
+        loader: loaders.workerLoader
+      });
+      app.globalData.worker.load().then(res => {
+        console.log(app.globalData.worker);
+        app.globalData.worker.loadProps().then(res => {
+          console.log(app.globalData.worker);
+          this.setData({
+            motto: app.globalData.worker.participations[0].totalHours
+          })
+        }).catch(res => {
+          console.log(res);
+        });
+      }).catch(res => {
+        console.log(res);
+      });
       that.hasWorkerInfo = true
       // ---------- Has worker info callback ----------
       if (app.workerInfoReadyCallback) {
@@ -150,21 +172,21 @@ w
           })
         }
       });
-      util.queue(promises, 5).then(() => {
-        that.setData({
-          motto: '本月工时:' + sum
-        })
-        wx.hideToast()
-        console.log('Successfuly get works')
-        app.globalData.worksInfoReady = true
-        // ---------- Has works info callback ----------
-        if (app.worksInfoReadyCallback) {
-          app.worksInfoReadyCallback()
-        }
-        // ----------------------------------------------
-      }).catch((res) => {
-        console.log(res)
-      })
+      // util.queue(promises, 5).then(() => {
+      //   that.setData({
+      //     motto: '本月工时:' + sum
+      //   })
+      //   wx.hideToast()
+      //   console.log('Successfuly get works')
+      //   app.globalData.worksInfoReady = true
+      //   // ---------- Has works info callback ----------
+      //   if (app.worksInfoReadyCallback) {
+      //     app.worksInfoReadyCallback()
+      //   }
+      //   // ----------------------------------------------
+      // }).catch((res) => {
+      //   console.log(res)
+      // })
       
       // Promise.all(promises).then(function (ress) {
       //   for (let res of ress) {
