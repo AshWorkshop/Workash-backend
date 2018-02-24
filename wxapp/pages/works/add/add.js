@@ -47,6 +47,7 @@ Page({
   },
   bindProjectChange: function (e){
     console.log('picker发送选择改变，携带值为', e.detail.value);
+    wx.setStorageSync('defaultProjectUrl', this.data.projectRange[e.detail.value].url);
     this.setData({
       projectSelected: e.detail.value
     })
@@ -59,7 +60,7 @@ Page({
     let parts = app.globalData.worker.participations.concat();
 
     if (defaultProjectUrl in app.globalData.worker.participationUrls) {
-      defaultIndex = app.globalData.worker.participationUrls[defaultPartUrl];
+      defaultIndex = app.globalData.worker.participationUrls[defaultProjectUrl];
     } else if (parts.length == 0) {
       parts = [{
         name: "暂未参与任何项目",
