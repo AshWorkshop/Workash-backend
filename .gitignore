@@ -103,6 +103,7 @@ ENV/
 # secrets
 wxapp/project.config.json
 backend/project/wx/secret.py
+wxapp/utils/config.js
 
 # emacs
 *~

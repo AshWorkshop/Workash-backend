@@ -35,5 +35,8 @@ Page({
   },
   onLoad: function() {
     console.log('Add-View load')
+    this.setData({
+      date: util.formatDate(new Date())
+    })
   }
 })
