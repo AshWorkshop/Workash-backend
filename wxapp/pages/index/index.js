@@ -47,20 +47,12 @@ Page({
   },
   addWorkTap: function () {
     console.log('Going to add-work-view')
-w
-    console.log('Going to works-view')
-    wx.navigateTo({
-      url: '../works/works',
-    })
-  },
-  addWorkTap: function () {
-    console.log('Going to add-work-view')
-    if (app.globalData.workerInfo) {
+    if (app.globalData.worker) {
       wx.navigateTo({
         url: '../works/add/add',
       })
     } else {
-      app.worksInfoReadyCallback = () => {
+      app.workerReadyCallback = () => {
         wx.navigateTo({
           url: '../works/add/add',
         })
@@ -75,7 +67,7 @@ w
     // })
     wx.showLoading({
       title: '正在加载数据...',
-    })
+    });
     if (app.globalData.userInfo) {
       this.setData({
         userInfo: app.globalData.userInfo,
@@ -105,6 +97,7 @@ w
 
     //-------------------- Get WorkerInfo --------------------
     var sessionid = app.globalData.sessionid
+    app.globalData.worker = null;
     if (sessionid) {
       this.getWorkerInfo(sessionid)
     } else {
@@ -155,10 +148,11 @@ w
         console.log(app.globalData.worker);
         app.globalData.worker.loadProps().then(res => {
           console.log(app.globalData.worker);
+
           let total = 0.0;
           let defaultPartUrl = wx.getStorageSync('defaultPartUrl') || "None";
           let defaultIndex = 0;
-          let parts = app.globalData.worker.participations;
+          let parts = app.globalData.worker.participations.concat();
           
           if (defaultPartUrl in app.globalData.worker.participationUrls) {
             defaultIndex = app.globalData.worker.participationUrls[defaultPartUrl] + 1;
@@ -167,6 +161,7 @@ w
             total += part.totalHours;
           }
           parts.unshift({ name: "全部", totalHours: total });
+
           this.setData({
             totalHours: parts[defaultIndex].totalHours,
             totalHoursRange: parts,

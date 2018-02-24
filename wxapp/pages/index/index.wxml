@@ -1,25 +1,19 @@
 <!--index.wxml-->
 <view class="container">
-  <view class="userinfo">
-    <button wx:if="{{!hasUserInfo && canIUse}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 获取头像昵称 </button>
-    <block wx:else>
-      <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" background-size="cover"></image>
-      <text class="userinfo-nickname">{{userInfo.nickName}}</text>
-    </block>
-  </view>
   <view class="total-hours">
   <picker mode="selector" value="{{totalHoursDefault}}" range="{{totalHoursRange}}" range-key="name" bindchange="bindHoursChange">
     <view class="part-name">
-      {{partName}}
-    </view>
-    <view class="picker">
-      <text class="hours">{{totalHours}}</text>
-      <text class="unit">小时</text>
+    <text class="part">{{partName}}</text>
+    <image class="dropdown-arrow" src="../../images/ic_arrow_drop_down_black_18dp.png" background-size="cover"></image>
     </view>
   </picker>
+  <view class="picker">
+      <text class="hours">{{totalHours}}</text>
+      <text class="unit">小时</text>
+  </view>
   </view>
   <view class="add-work">
-    <button type="primary" class="add-work-btn" bindtap="addWorkTap" hover-class="other-button-hover"> ＋ </button>
+    <image bindtap="addWorkTap" class="add-work-btn" src="../../images/ic_add_circle_black_48dp.png" background-size="cover"></image>
   </view>
   
 </view>

@@ -1,31 +1,19 @@
 /**index.wxss**/
-.userinfo {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: -50px;
-}
-
-.userinfo-avatar {
+.add-work-btn {
   width: 128rpx;
   height: 128rpx;
   margin: 20rpx;
   border-radius: 50%;
 }
-.add-work-btn {
-  margin: 20rpx;
-  border-radius: 50%;
-}
-
-.userinfo-nickname {
-  color: #aaa;
-}
 
 .total-hours {
-  margin-top: 40px;
+  margin-top: 0px;
   align-content: center;
 }
 .part-name {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
   font-size: 10pt;
   color: #aaaaaa;
@@ -36,7 +24,7 @@
   align-items: center;
 }
 .hours {
-  margin-top: 5px;
+  margin-top: 20px;
   font-size: 32pt;
   font-weight: 100;
   text-align: center;
@@ -45,7 +33,15 @@
   font-size: 10pt;
   margin-top: -5px;
 }
-
 .add-work {
-  margin-top: 30px;
+  margin-top: 60px;
+}
+
+.dropdown-arrow {
+  width: 36rpx;
+  height: 36rpx;
+  border-radius: 50%;
+}
+.part {
+  text-align: center;
 }
