@@ -10,5 +10,27 @@
     "navigationBarBackgroundColor": "#fff",
     "navigationBarTitleText": "我的工时",
     "navigationBarTextStyle": "black"
+  },
+  "tabBar": {
+    "color": "#dddddd",
+    "selectedColor": "#3cc51f",
+    "borderStyle": "white",
+    "backgroundColor": "#ffffff",
+    "list": [{
+      "pagePath": "pages/index/index",
+      "iconPath": "images/ic_dashboard_black_36dp_me.png",
+      "selectedIconPath": "images/ic_dashboard_black_36dp_me_HL.png",
+      "text": "首页"
+    }, {
+      "pagePath": "pages/works/works",
+      "iconPath": "images/ic_inbox_black_36dp_me.png",
+      "selectedIconPath": "images/ic_inbox_black_36dp_me_HL.png",
+      "text": "工作"
+    }, {
+      "pagePath": "pages/logs/logs",
+      "iconPath": "images/ic_dashboard_black_36dp_me.png",
+      "selectedIconPath": "images/ic_dashboard_black_36dp_me_HL.png",
+      "text": "日志"
+    }]
   }
 }

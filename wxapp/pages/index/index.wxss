@@ -3,6 +3,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-top: -50px;
 }
 
 .userinfo-avatar {
@@ -11,16 +12,40 @@
   margin: 20rpx;
   border-radius: 50%;
 }
+.add-work-btn {
+  margin: 20rpx;
+  border-radius: 50%;
+}
 
 .userinfo-nickname {
   color: #aaa;
 }
 
-.usermotto {
-  margin-top: 200px;
-  font-size: 18pt;
+.total-hours {
+  margin-top: 40px;
+  align-content: center;
+}
+.part-name {
+  text-align: center;
+  font-size: 10pt;
+  color: #aaaaaa;
+}
+.picker {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.hours {
+  margin-top: 5px;
+  font-size: 32pt;
+  font-weight: 100;
+  text-align: center;
+}
+.unit {
+  font-size: 10pt;
+  margin-top: -5px;
 }
 
 .add-work {
-  margin-top: 10px;
+  margin-top: 30px;
 }

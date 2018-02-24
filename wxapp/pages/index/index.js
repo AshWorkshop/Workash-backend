@@ -12,17 +12,11 @@ const app = getApp()
 
 Page({
   data: {
-    motto: '0',
+    totalHours: 0,
     userInfo: {},
     hasUserInfo: false,
     hasWorkerInfo: false,
     canIUse: wx.canIUse('button.open-type.getUserInfo'),
-    defaultSize: 'default',
-    primarySize: 'default',
-    warnSize: 'default',
-    disabled: false,
-    plain: false,
-    loading: false
   },
   //事件处理函数
   bindViewTap: function() {
@@ -35,6 +29,21 @@ Page({
     wx.navigateTo({
       url: '../works/works',
     })
+  },
+  bindHoursChange: function(e) {
+    if (this.data.totalHoursRange) {
+      console.log('totalHours Change: ' + e.detail.value);
+      this.setData({
+        totalHours: this.data.totalHoursRange[e.detail.value].totalHours,
+        partName: this.data.totalHoursRange[e.detail.value].name
+      });
+      if (e.detail.value != 0) {
+        wx.setStorageSync('defaultPartUrl', this.data.totalHoursRange[e.detail.value].url);
+      } else {
+        wx.setStorageSync('defaultPartUrl', null);
+      }
+      
+    }
   },
   addWorkTap: function () {
     console.log('Going to add-work-view')
@@ -125,14 +134,15 @@ w
     }).catch(res => {
       if (res.statusCode == 404){
         console.log('Worker not exists, creating a new one...')
-        return wxRequest.postRequest(host + 'worker/workers/', {}, sessionid).then(res => {
-          workerInfo = res.data
+        return wxRequest.postRequest(host + 'worker/workers/', { participations: [host + "worker/projects/1/"]}, sessionid).then(res => {
+          console.log(res)
           console.log('Successfully created a new worker!')
-          console.log('workerInfo: ' + workerInfo.url)
+          workerInfo = res.data
         })
       }
     }).finally(res => {
       console.log('Successfully got worker info!')
+      console.log(workerInfo)
       app.globalData.workerInfo = workerInfo;
       app.globalData.worker = new Worker({
         url: workerInfo.url,
@@ -145,8 +155,23 @@ w
         console.log(app.globalData.worker);
         app.globalData.worker.loadProps().then(res => {
           console.log(app.globalData.worker);
+          let total = 0.0;
+          let defaultPartUrl = wx.getStorageSync('defaultPartUrl') || "None";
+          let defaultIndex = 0;
+          let parts = app.globalData.worker.participations;
+          
+          if (defaultPartUrl in app.globalData.worker.participationUrls) {
+            defaultIndex = app.globalData.worker.participationUrls[defaultPartUrl] + 1;
+          }
+          for (let part of parts) {
+            total += part.totalHours;
+          }
+          parts.unshift({ name: "全部", totalHours: total });
           this.setData({
-            motto: app.globalData.worker.participations[0].totalHours
+            totalHours: parts[defaultIndex].totalHours,
+            totalHoursRange: parts,
+            totalHoursDefault: defaultIndex,
+            partName: parts[defaultIndex].name
           });
           // ---------- Has worker info callback ----------
           if (app.workerReadyCallback) {

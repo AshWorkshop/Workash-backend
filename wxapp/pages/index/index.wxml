@@ -7,12 +7,19 @@
       <text class="userinfo-nickname">{{userInfo.nickName}}</text>
     </block>
   </view>
-  <view class="usermotto">
-    <text bindtap="hoursTap" class="user-motto">{{motto}}h</text>
+  <view class="total-hours">
+  <picker mode="selector" value="{{totalHoursDefault}}" range="{{totalHoursRange}}" range-key="name" bindchange="bindHoursChange">
+    <view class="part-name">
+      {{partName}}
+    </view>
+    <view class="picker">
+      <text class="hours">{{totalHours}}</text>
+      <text class="unit">小时</text>
+    </view>
+  </picker>
   </view>
   <view class="add-work">
-    <button type="primary" size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}"
-        disabled="{{disabled}}" bindtap="addWorkTap" hover-class="other-button-hover"> ＋ </button>
+    <button type="primary" class="add-work-btn" bindtap="addWorkTap" hover-class="other-button-hover"> ＋ </button>
   </view>
   
 </view>
