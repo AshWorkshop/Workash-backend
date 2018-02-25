@@ -127,7 +127,7 @@ Page({
     }).catch(res => {
       if (res.statusCode == 404){
         console.log('Worker not exists, creating a new one...')
-        return wxRequest.postRequest(host + 'worker/workers/', { participations: [host + "worker/projects/1/"]}, sessionid).then(res => {
+        return wxRequest.postRequest(host + 'worker/workers/', {}, sessionid).then(res => {
           console.log(res)
           console.log('Successfully created a new worker!')
           workerInfo = res.data
