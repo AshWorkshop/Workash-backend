@@ -17,7 +17,7 @@ Page({
   formSubmit: function (e) {
     var data = e.detail.value;
     data.date = this.data.date;
-    data.project = this.data.projectRange[this.data.projectSelected].url;
+    data.project = this.data.rangeArray[1][this.data.indexArray[1]].url;
     console.log('form发生了submit事件，携带数据为：', data);
     if (data.project) {
       // wx.showLoading({
