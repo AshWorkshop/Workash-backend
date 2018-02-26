@@ -13,7 +13,7 @@
       </view>
     </picker>
     <view class="add-part">
-      <text class="add-part-text">添加</text>
+      <text class="add-part-text" bindtap="bindAddPartTap">添加</text>
     </view>
   </view>
 

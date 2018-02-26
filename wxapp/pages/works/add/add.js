@@ -69,6 +69,12 @@ Page({
       projectName: this.data.projectRange[e.detail.value].name
     })
   },
+  bindAddPartTap: function (){
+    console.log('Going to add-part-page');
+    wx.redirectTo({
+      url: '../../parts/add/add',
+    })
+  },
   onLoad: function() {
     console.log('Add-View load')
 
