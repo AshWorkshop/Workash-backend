@@ -149,8 +149,6 @@ Page({
 
     this.setData({
       date: util.formatDate(new Date()),
-      projectSelected: defaultIndex,
-      projectRange: parts,
       projectName: projectName,
       rangeArray: rangeArray.concat(),
       indexArray: indexArray.concat(),
