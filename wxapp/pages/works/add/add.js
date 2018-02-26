@@ -62,12 +62,53 @@ Page({
     })
   },
   bindProjectChange: function (e){
-    console.log('picker发送选择改变，携带值为', e.detail.value);
-    wx.setStorageSync('defaultProjectUrl', this.data.projectRange[e.detail.value].url);
-    this.setData({
-      projectSelected: e.detail.value,
-      projectName: this.data.projectRange[e.detail.value].name
-    })
+    console.log('picker发送选择改变，携带值为', e);
+    if (this.data.rangeArray[1].length == 0) {
+      this.setData({
+        indexArray: e.detail.value,
+        defaulIndexArray: e.detail.value,
+        projectName: "请添加或创建项目"
+      })
+    } else {
+      this.setData({
+        indexArray: e.detail.value,
+        defaulIndexArray: e.detail.value,
+        projectName: this.data.rangeArray[1][e.detail.value[1]].name
+      });
+      wx.setStorageSync('savedProjectUrl', this.data.rangeArray[1][e.detail.value[1]].url);
+    }
+    
+  },
+  bindProjectColumnChange: function (e){
+    console.log('picker发送选择改变，携带值为', e);
+    let col = e.detail.column;
+    let index = e.detail.value;
+    let rangeArray = this.data.rangeArray;
+    if (col == 0) {
+        if (index == this.data.defaultIndexArray[0]) {
+          this.setData({
+            indexArray: this.data.defaultIndexArray,
+          });
+          if (index == 0) {
+            rangeArray[1] = this.data.parts;
+          } else if (index == 1) {
+            rangeArray[1] = this.data.projects;
+          }
+        } else {
+          this.setData({
+            indexArray: [index, 0],
+          });
+          if (index == 0) {
+            rangeArray[1] = this.data.parts;
+          } else if (index == 1) {
+            rangeArray[1] = this.data.projects;
+          }
+        }
+        this.setData({
+          rangeArray: rangeArray.concat()
+        })
+    } else if (col == 1) {
+    }
   },
   bindAddPartTap: function (){
     console.log('Going to add-part-page');
@@ -78,24 +119,42 @@ Page({
   onLoad: function() {
     console.log('Add-View load')
 
-    let defaultProjectUrl = wx.getStorageSync('defaultProjectUrl') || "None";
-    let defaultIndex = 0;
+    let rangeArray = [[{name: '已参加的'}, {name: '我创建的'}], []];
+    let indexArray = [0, 0];
+    let projectName = "请选择";
+    let projects = app.globalData.worker.projects.concat();
     let parts = app.globalData.worker.participations.concat();
+    let projectUrls = app.globalData.worker.projectUrls;
+    let partUrls = app.globalData.worker.participationUrls;
 
-    if (defaultProjectUrl in app.globalData.worker.participationUrls) {
-      defaultIndex = app.globalData.worker.participationUrls[defaultProjectUrl];
-    } else if (parts.length == 0) {
-      parts = [{
-        name: "暂未参与任何项目",
-        url: null
-      }];
+    this.setData({
+      parts: parts,
+      projects: projects,
+    });
+
+    let savedProjectUrl = wx.getStorageSync('savedProjectUrl') || "None";
+
+    if (savedProjectUrl in partUrls) {
+      rangeArray[1] = parts;
+      indexArray = [0, partUrls[savedProjectUrl]];
+      projectName = rangeArray[1][indexArray[1]].name;
+    } else if (savedProjectUrl in projectUrls) {
+      rangeArray[1] = projects;
+      indexArray = [1, projectUrls[savedProjectUrl]];
+      projectName = rangeArray[1][indexArray[1]].name;
+    } else {
+      rangeArray[1] = parts;
+      indexArray = [0, 0];
     }
 
     this.setData({
       date: util.formatDate(new Date()),
       projectSelected: defaultIndex,
       projectRange: parts,
-      projectName: parts[defaultIndex].name
+      projectName: projectName,
+      rangeArray: rangeArray.concat(),
+      indexArray: indexArray.concat(),
+      defaultIndexArray: indexArray.concat(),
     })
   }
 })

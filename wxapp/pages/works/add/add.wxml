@@ -6,14 +6,14 @@
     <view class="section__title">
       工作项目
     </view>
-    <picker mode="selector" value="{{projectSelected}}" range="{{projectRange}}" range-key="name" bindchange="bindProjectChange">
+    <picker mode="multiSelector" value="{{indexArray}}" range="{{rangeArray}}" bindchange="bindProjectChange" bindcolumnchange="bindProjectColumnChange" range-key="name">
       <view class="picker">
        <text class="project">{{projectName}}</text>
        <image class="dropdown-arrow" src="../../../images/ic_arrow_drop_down_black_18dp.png" background-size="cover"></image>
       </view>
     </picker>
     <view class="add-part">
-      <text class="add-part-text" bindtap="bindAddPartTap">添加</text>
+      <text class="add-part-text" bindtap="bindAddPartTap">创建</text>
     </view>
   </view>
 
