@@ -10,6 +10,6 @@ router.register(r'wxusers', views.WxUserViewSet)
 
 urlpatterns = [
     path('login/', views.LoginView.as_view()),
-    path('getuser/', views.UserView.as_view()),
+    path('wxuserinfo/', views.WxUserInfoView.as_view()),
     path('', include(router.urls)),
 ]

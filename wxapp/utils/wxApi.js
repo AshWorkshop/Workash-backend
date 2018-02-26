@@ -42,11 +42,18 @@ function wxGetUserInfo() {
 function wxGetSystemInfo() {
   return wxPromisify(wx.getSystemInfo)
 }
+/**
+ * 获取用户设置
+ */
+function wxGetSetting() {
+  return wxPromisify(wx.getSetting);
+}
 
 
 module.exports = {
   wxPromisify: wxPromisify,
   wxLogin: wxLogin,
   wxGetUserInfo: wxGetUserInfo,
-  wxGetSystemInfo: wxGetSystemInfo
+  wxGetSystemInfo: wxGetSystemInfo,
+  wxGetSetting: wxGetSetting
 }

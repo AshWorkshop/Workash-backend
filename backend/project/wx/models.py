@@ -10,3 +10,9 @@ class WxUser(models.Model):
         on_delete=models.CASCADE
     )
     # unionid = models.CharField(max_length=100)
+    nickName = models.CharField(max_length=100, default="Unknown")
+    avatarUrl = models.URLField(default="http://unknown.unkown/")
+    gender = models.IntegerField(default=0)
+    city = models.CharField(max_length=100, default="Unknown")
+    province = models.CharField(max_length=100, default="Unknown")
+    country = models.CharField(max_length=100, default="Unknown")

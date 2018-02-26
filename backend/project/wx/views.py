@@ -7,6 +7,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from project.wx.serializers import UserSerializer
 from project.wx.serializers import WxUserSerializer
+from project.wx.serializers import WxUserInfoSerializer
 from project.wx.models import WxUser
 from project.wx.utils.bases import BaseView
 from project.wx.authentication import WxLoginAuthentication
@@ -32,18 +33,27 @@ class WxUserViewSet(viewsets.ModelViewSet):
     serializer_class = WxUserSerializer
 
 
-class UserView(BaseView):
-    def get(self, request, format=None):
+class WxUserInfoView(BaseView):
+    def post(self, request, format=None):
         session = request.auth
+        wxuser = request.user.wxuser
 
         appid = SECRET['appid']
         session_key = session['session_key']
-        encryptedData = request.GET['encryptedData']
-        iv = request.GET['iv']
-
+        try:
+            encryptedData = request.data['encryptedData']
+            iv = request.data['iv']
+        except KeyError:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        
         pc = WXBizDataCrypt(appid, session_key)
         data = pc.decrypt(encryptedData, iv)
+        print(data)
 
-        serializer = UserSerializer(request.user, context={'request': request})
-
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        serializer = WxUserInfoSerializer(wxuser, data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=status.HTTP_200_OK)
+        else:
+            print(serializer.errors)
+            return Response(status=status.HTTP_400_BAD_REQUEST)

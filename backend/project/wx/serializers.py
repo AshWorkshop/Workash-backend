@@ -14,4 +14,10 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 class WxUserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = WxUser
-        fields = ('url', 'user', 'worker')
+        fields = ('url', 'user', 'worker', 'nickName', 'avatarUrl', 'gender', 'city', 'province', 'country')
+
+
+class WxUserInfoSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = WxUser
+        fields = ('url', 'nickName', 'avatarUrl', 'gender', 'city', 'province', 'country')
