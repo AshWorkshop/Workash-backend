@@ -55,7 +55,10 @@ export class Loadable {
       let promises = []
       for (let prop in this) {
         if (this[prop] instanceof Loadable) {
-          promises.push(this[prop].load)
+          console.log(this[prop])
+          promises.push(() => {
+            return this[prop].load.apply(this[prop]);
+          });
         } else if (this[prop].__proto__ === Array.prototype) {
           for (let propItem of this[prop]) {
             if (propItem instanceof Loadable) {

@@ -2,6 +2,7 @@
 var Project = require('./Project.js').Project;
 var Worker = require('./Worker.js').Worker;
 var Work = require('./Work.js').Work;
+var WxUser = require('./WxUser.js').WxUser;
 
 var Promise = require('../../plugins/es6-promise.js');
 var wxRequest = require('../wxRequest.js');
@@ -19,6 +20,12 @@ export function workerLoader (url, data) {
       wxRequest.getRequest(url, {}, data.sessionid).then(res => {
         workerInfo = res.data;
         console.log('Successfully get worker: ' + workerInfo.url);
+        let wxUser = new WxUser({
+          url: workerInfo.wxuser,
+          loadData: this.loadData,
+          loader: wxUserLoader
+        });
+        this.wxUser = wxUser;
         this.participations = [];
         for (let partInfo of workerInfo.participations) {
           let part = new Project({
@@ -179,6 +186,35 @@ export function workLoader(url, data) {
         this.content = workInfo.content;
         this.date = workInfo.date;
         this.hours = workInfo.hours;
+        resolve(res);
+      }).catch(res => {
+        console.log(res);
+        reject(res);
+      }).finally(res => {
+        // wx.hideToast();
+      });
+    } else {
+      reject("No sessionid!");
+    }
+  });
+}
+
+
+export function wxUserLoader(url, data) {
+  return new Promise((resolve, reject) => {
+    if (data.sessionid) {
+      let info = null;
+      // wx.showToast({
+      //   title: '正在加载Worker...',
+      //   icon: 'loading',
+      //   duration: 10000
+      // });
+      wxRequest.getRequest(url, {}, data.sessionid).then(res => {
+        info = res.data;
+        console.log('Successfully get info: ' + info.url);
+        this.nickName = info.nickName;
+        this.avatarUrl = info.avatarUrl;
+        this.gender = info.gender;
         resolve(res);
       }).catch(res => {
         console.log(res);

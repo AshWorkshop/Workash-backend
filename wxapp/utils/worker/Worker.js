@@ -1,20 +1,5 @@
 var Loadable = require('./Loadable.js').Loadable;
 
-// function Worker(args) {
-//   props = args.instance || {};
-//   this.url = args.url || props.url || null;
-  // this.participations = args.participations || props.participations || [];
-  // this.projects = args.projects || props.projects || [];
-// }
-
-// Worker.prototype.load = function () {
-//   alert('Hello, ' + this.name + '!');
-// };
-
-// function createWorker(args) {
-//   return new Worker(args || {});
-// }
-
 export class Worker extends Loadable {
   constructor(args) {
     super(args)
@@ -24,6 +9,7 @@ export class Worker extends Loadable {
     this.participations = args.participations || props.participations || [];
     this.projects = args.projects || props.projects || [];
     this.works = args.works || props.works || [];
+    this.wxUser = args.wxUser || props.wxUser || null;
     //this.loader = args.loader || props.loader || defaultProps.loader;
   }
 

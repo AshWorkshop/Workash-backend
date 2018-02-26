@@ -34,6 +34,9 @@ App({
               iv: res.iv
             }, sessionid).then(res => {
               console.log('Successfully update WxUser Info');
+              if (that.loginCallback) {
+                that.loginCallback(sessionid)
+              }
             }).catch(res => {
                 console.log(res);
             })
@@ -65,9 +68,6 @@ App({
       //   }
       // })
 
-      if (that.loginCallback) {
-        that.loginCallback(sessionid)
-      }
     })
     // 获取用户信息
     wx.getSetting({
