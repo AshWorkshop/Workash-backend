@@ -59,7 +59,7 @@ export class Loadable {
           promises.push(() => {
             return this[prop].load.apply(this[prop]);
           });
-        } else if (this[prop].__proto__ === Array.prototype) {
+        } else if (this[prop] && this[prop].__proto__ === Array.prototype) {
           for (let propItem of this[prop]) {
             if (propItem instanceof Loadable) {
               promises.push(() => {

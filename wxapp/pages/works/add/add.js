@@ -113,7 +113,7 @@ Page({
   bindAddPartTap: function (){
     console.log('Going to add-part-page');
     wx.redirectTo({
-      url: '../../parts/add/add',
+      url: '../../projects/detail/detail?url='+ config.host +'worker/projects/2/',
     })
   },
   onLoad: function() {

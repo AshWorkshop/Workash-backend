@@ -34,6 +34,7 @@ App({
               iv: res.iv
             }, sessionid).then(res => {
               console.log('Successfully update WxUser Info');
+              that.globalData.isLogin = true;
               if (that.loginCallback) {
                 that.loginCallback(sessionid)
               }
@@ -95,6 +96,7 @@ App({
     userInfo: null,
     sessionid: null,
     workerInfo: null,
-    worksInfoReady: false
+    worksInfoReady: false,
+    isLogin: false
   }
 })
