@@ -25,7 +25,7 @@ Page({
       // });
       this.setData({
         submitDisabled: true,
-        submitText: "提交中"
+        submitText: "提交中..."
       })
       wxRequest.postRequest(config.host + 'worker/works/', data, app.globalData.sessionid).then(res => {
         console.log(res);
@@ -113,7 +113,7 @@ Page({
   bindAddPartTap: function (){
     console.log('Going to add-part-page');
     wx.redirectTo({
-      url: '../../projects/detail/detail?url='+ config.host +'worker/projects/2/',
+      url: '../../projects/detail/detail',
     })
   },
   onLoad: function() {

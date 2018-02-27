@@ -9,11 +9,11 @@
       </view>
       <view class="section">
           <view class="section__title">项目简介</view>
-          <input name="detail" placeholder="请输入项目简介" disabled="{{isReadOnly}}" value="{{detail}}" />
+          <input name="detail" placeholder="请输入项目简介" disabled="{{isReadOnly}}" value="{{detail}}"  />
       </view>
       <view class="section">
           <view class="section__title">开始日期</view>
-          <picker mode="date" value="{{begin}}" start="" end="" bindchange="bindBeginDateChange">
+          <picker mode="date" value="{{begin}}" start="" end="" bindchange="bindBeginDateChange" disabled="{{isReadOnly}}">
               <view class="picker">
                   <text>{{begin}}</text>
                   <image hidden="{{isReadOnly}}" class="dropdown-arrow" src="../../../images/ic_arrow_drop_down_black_18dp.png" background-size="cover"></image>
@@ -22,7 +22,7 @@
       </view>
       <view class="section">
           <view class="section__title">结束日期</view>
-          <picker mode="date" value="{{end}}" start="" end="" bindchange="bindEndDateChange">
+          <picker mode="date" value="{{end}}" start="" end="" bindchange="bindEndDateChange" disabled="{{isReadOnly}}">
               <view class="picker">
                   <text>{{end}}</text>
                   <image hidden="{{isReadOnly}}" class="dropdown-arrow" src="../../../images/ic_arrow_drop_down_black_18dp.png" background-size="cover"></image>
@@ -42,9 +42,9 @@
 
   <view class="btn-area">
       <button type="primary" size="default" disabled="{{!isShare}}" bindtap="bindAddPartTap" hidden="{{!isShare}}">{{addPartText}}</button>
-      <button type="default" size="default" disabled="{{!isShare}}" bindtap="bindReturnTap" hidden="{{!isShare}}">{{returnText}}</button>
-      <button type="primary" size="default" disabled="{{isShare}}" open-type="share" hidden="{{isShare}}">{{shareText}}</button>
-      <button formType="submit" type="default" size="default" disabled="{{isReadOnly}}" hidden="{{isShare}}">{{submitText}}</button>
+      <button type="primary" size="default" disabled="{{isShare}}" open-type="share" hidden="{{isShareHidden}}">{{shareText}}</button>
+      <button formType="submit" type="{{submitType}}" size="default" disabled="{{submitDisable || isReadOnly}}" hidden="{{isReadOnly}}">{{submitText}}</button>
+      <button type="default" size="default" bindtap="bindReturnTap" >{{returnText}}</button>
       <button formType="reset">{{resetText}}</button>
   </view>
 
