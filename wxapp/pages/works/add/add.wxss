@@ -9,6 +9,11 @@
 .picker {
   min-width: 300rpx;
 }
+text {
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
 .dropdown-arrow {
   width: 36rpx;
   height: 36rpx;
