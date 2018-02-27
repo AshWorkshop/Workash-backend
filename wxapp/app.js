@@ -39,9 +39,11 @@ App({
                 that.loginCallback(sessionid)
               }
             }).catch(res => {
+                console.log('Get wxuser info failed');
                 console.log(res);
             })
           }).catch(res => {
+            console.log('Get userinfo failed');
             console.log(res);
           })
         }
@@ -69,6 +71,9 @@ App({
       //   }
       // })
 
+    }).catch(res => {
+      console.log('login failed');
+      console.log(res);
     })
     // 获取用户信息
     wx.getSetting({

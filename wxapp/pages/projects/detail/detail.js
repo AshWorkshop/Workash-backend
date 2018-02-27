@@ -28,7 +28,8 @@ Page({
     shareText: "分享",
     addPartText: "参与项目",
     returnText: "返回主页",
-    project: null
+    project: null,
+    url: null
   },
   formSubmit: function(e) {
     var data = e.detail.value;
@@ -109,6 +110,9 @@ Page({
     }
     if (app.globalData.isLogin) {
       if (options.url) {
+        this.setData({
+          url: options.url
+        });
         this.getProject(options.url);
       } else {
         this.showProjectForm();
@@ -116,6 +120,9 @@ Page({
       
     } else {
       if (options.url){
+        this.setData({
+          url: options.url
+        });
         app.loginCallback = () => {
           this.getProject(options.url);
         }
@@ -142,7 +149,7 @@ Page({
   onShareAppMessage: function (res) {
     return {
       title: '分享工作项目',
-      path: '/pages/projects/detail/detail?url=' + config.host  + 'worker/projects/1/&share=true',
+      path: '/pages/projects/detail/detail?url=' + this.data.url + '&share=true',
       success: function (res) {
 
       },
