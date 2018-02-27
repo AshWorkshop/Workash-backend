@@ -45,25 +45,47 @@ Page({
       submitDisable: true,
       submitText: "提交中..."
     });
-    wxRequest.postRequest(config.host + 'worker/projects/', data, sessionid).then(res => {
-      console.log(res);
-      wx.showToast({
-        title: '创建成功！'
+    if (this.data.isCreate) {
+      wxRequest.postRequest(config.host + 'worker/projects/', data, sessionid).then(res => {
+        console.log(res);
+        wx.showToast({
+          title: '创建成功！'
+        });
+        wx.redirectTo({
+          url: '/pages/projects/detail/detail?url=' + res.data.url,
+        })
+      }).catch(res => {
+        console.log(res);
+        wx.showToast({
+          title: '创建失败！'
+        });
+      }).finally(res => {
+        this.setData({
+          submitDisable: false,
+          submitText: "创建"
+        });
       });
-      wx.redirectTo({
-        url: '/pages/projects/detail/detail?url=' + res.data.url,
-      })
-    }).catch(res => {
-      console.log(res);
-      wx.showToast({
-        title: '创建失败！'
+    } else {
+      wxRequest.putRequest(this.data.url, data, sessionid).then(res => {
+        console.log(res);
+        wx.showToast({
+          title: '更新成功！'
+        });
+        wx.redirectTo({
+          url: '/pages/projects/detail/detail?url=' + res.data.url,
+        })
+      }).catch(res => {
+        console.log(res);
+        wx.showToast({
+          title: '更新失败！'
+        });
+      }).finally(res => {
+        this.setData({
+          submitDisable: false,
+          submitText: "更新"
+        });
       });
-    }).finally(res => {
-      this.setData({
-        submitDisable: false,
-        submitText: "创建"
-      });
-    })
+    }
   },
   bindReturnTap: function () {
     wx.switchTab({
