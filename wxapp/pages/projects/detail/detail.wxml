@@ -41,7 +41,7 @@
   </view>
 
   <view class="btn-area">
-      <button type="primary" size="default" disabled="{{!isShare}}" bindtap="bindAddPartTap" hidden="{{!isShare}}">{{addPartText}}</button>
+      <button type="primary" size="default" disabled="{{!isShare || addPartDisable}}" bindtap="bindAddPartTap" hidden="{{!isShare}}">{{addPartText}}</button>
       <button type="primary" size="default" disabled="{{isShare}}" open-type="share" hidden="{{isShareHidden}}">{{shareText}}</button>
       <button formType="submit" type="{{submitType}}" size="default" disabled="{{submitDisable || isReadOnly}}" hidden="{{isReadOnly}}">{{submitText}}</button>
       <button type="default" size="default" bindtap="bindReturnTap" >{{returnText}}</button>

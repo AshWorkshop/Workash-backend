@@ -16,6 +16,7 @@ Page({
   },
   formSubmit: function (e) {
     var data = e.detail.value;
+    var app = getApp();
     data.date = this.data.date;
     data.project = this.data.rangeArray[1][this.data.indexArray[1]].url;
     console.log('form发生了submit事件，携带数据为：', data);
@@ -29,12 +30,33 @@ Page({
       })
       wxRequest.postRequest(config.host + 'worker/works/', data, app.globalData.sessionid).then(res => {
         console.log(res);
-        wx.showToast({
-          title: '提交成功！'
-        });
-        wx.switchTab({
-          url: '../../index/index'
-        });
+        if (! (data.project in app.globalData.worker.participationUrls)) {
+          let parts = [];
+          for (let part of app.globalData.worker.participations) {
+            parts.push(part.url);
+          }
+          parts.push(data.project);
+          wxRequest.putRequest(app.globalData.worker.url, {participations: parts}, app.globalData.sessionid).then(res => {
+            console.log('Successfully update worker parts');
+          }).catch(res => {
+            console.log('Update worker parts failed');
+          }).finally(res => {
+            wx.showToast({
+              title: '提交成功！'
+            });
+            wx.switchTab({
+              url: '../../index/index'
+            });
+          })
+        } else {
+          wx.showToast({
+            title: '提交成功！'
+          });
+          wx.switchTab({
+            url: '../../index/index'
+          });
+        }
+        
       }).catch(res => {
         wx.showToast({
           title: '提交失败！',

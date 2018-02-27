@@ -53,7 +53,21 @@ function postRequest(url, data, sessionid) {
   })
 }
 
+function putRequest(url, data, sessionid) {
+  var putRequest = wxPromisify(wx.request);
+  return putRequest({
+    url: url,
+    method: "PUT",
+    data: data,
+    header: {
+      'Content-Type': 'application/json',
+      'WXSESSION': sessionid
+    }
+  });
+}
+
 module.exports = {
   postRequest: postRequest,
-  getRequest: getRequest
+  getRequest: getRequest,
+  putRequest: putRequest
 }
