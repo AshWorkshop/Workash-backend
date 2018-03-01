@@ -24,30 +24,26 @@ App({
       var sessionid = res.data
       console.log('sessionid: ' + sessionid)
       that.globalData.sessionid = sessionid
+      that.globalData.isLogin = true;
+      if (that.loginCallback) {
+        that.loginCallback(sessionid);
+      }
 
       // 获取用户信息
       var wxGetSetting = wxApi.wxGetSetting()
       wxGetSetting().then(res => {
         console.log('Getting userinfo')
         if (res.authSetting['scope.userInfo']) {
-          var wxGetUserInfo = wxApi.wxGetUserInfo({withCredentials: true})
-          wxGetUserInfo().then(res => {
-            wxRequest.postRequest(host + 'wx/wxuserinfo/', {
-              encryptedData: res.encryptedData,
-              iv: res.iv
-            }, sessionid).then(res => {
-              console.log('Successfully update WxUser Info');
-              that.globalData.isLogin = true;
-              if (that.loginCallback) {
-                that.loginCallback(sessionid)
+          that.getUserInfo(sessionid);
+        } else {
+          console.log('Not auth');
+          wx.openSetting({
+            success: res => {
+              console.log(res);
+              if(res.authSetting['scop.userInfo']) {
+                that.getUserInfo(sessionid);
               }
-            }).catch(res => {
-                console.log('Get wxuser info failed');
-                console.log(res);
-            })
-          }).catch(res => {
-            console.log('Get userinfo failed');
-            console.log(res);
+            }
           })
         }
       }).catch(res => {
@@ -79,6 +75,28 @@ App({
           })
         }
       }
+    })
+  },
+  getUserInfo: function (sessionid) {
+    var wxGetUserInfo = wxApi.wxGetUserInfo({ withCredentials: true })
+    var that = this;
+    wxGetUserInfo().then(res => {
+      wxRequest.postRequest(config.host + 'wx/wxuserinfo/', {
+        encryptedData: res.encryptedData,
+        iv: res.iv
+      }, sessionid).then(res => {
+        console.log('Successfully update WxUser Info');
+        that.globalData.isUserInfoUpdated = true;
+        if (that.userInfoUpdateCallback) {
+          that.userInfoUpdateCallback();
+        }
+      }).catch(res => {
+        console.log('Get wxuser info failed');
+        console.log(res);
+      })
+    }).catch(res => {
+      console.log('Get userinfo failed');
+      console.log(res);
     })
   },
   globalData: {
