@@ -102,7 +102,7 @@ ENV/
 
 # secrets
 wxapp/project.config.json
-backend/project/wx/secret.py
+project/wx/secret.py
 wxapp/utils/config.js
 
 # emacs
@@ -112,5 +112,5 @@ wxapp/utils/config.js
 /backend/*.sqlite3
 
 # local_files
-backend/project/wx/migrations/
-backend/project/worker/migrations/
+project/wx/migrations/
+project/worker/migrations/
